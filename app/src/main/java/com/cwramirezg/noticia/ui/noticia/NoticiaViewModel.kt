@@ -22,6 +22,10 @@ class NoticiaViewModel(
     val action: LiveData<String> = _action
 
     init {
+        refresh()
+    }
+
+    fun refresh() {
         disposables.add(
             repository.getNoticia()
                 .subscribeOn(Schedulers.io())

@@ -31,7 +31,9 @@ class NoticiaActivity : AppCompatActivity(R.layout.activity_noticia) {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         setupAction()
         setupRv()
+        setupRefresh()
     }
+
 
     private fun setupAction() {
         viewModel.action.observe(this) {
@@ -71,6 +73,13 @@ class NoticiaActivity : AppCompatActivity(R.layout.activity_noticia) {
                 binding.rvNoticia.visibility = View.GONE
                 binding.tvSinData.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun setupRefresh() {
+        binding.srlNoticia.setOnRefreshListener {
+            viewModel.refresh()
+            binding.srlNoticia.isRefreshing = false
         }
     }
 
