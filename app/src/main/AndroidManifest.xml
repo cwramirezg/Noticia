@@ -4,6 +4,7 @@
     package="com.cwramirezg.noticia">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".App"
@@ -28,6 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.noticia.NoticiaActivity" />
+        <activity android:name=".ui.detalle.DetalleActivity" />
     </application>
 
 </manifest>

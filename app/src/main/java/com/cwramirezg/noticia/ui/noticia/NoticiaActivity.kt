@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cwramirezg.noticia.R
 import com.cwramirezg.noticia.databinding.ActivityNoticiaBinding
+import com.cwramirezg.noticia.ui.detalle.DetalleActivity
 import com.cwramirezg.noticia.ui.noticia.adapter.NoticiaAdapter
 import com.cwramirezg.noticia.util.SimpleDividerItemDecoration
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,18 +52,10 @@ class NoticiaActivity : AppCompatActivity(R.layout.activity_noticia) {
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(SimpleDividerItemDecoration(context, R.drawable.line_divider_white))
-
         }
         binding.rvNoticia.adapter = NoticiaAdapter {
-//            val intent = Intent()
-//            val tipo = viewModel.noticiaList.value!![it]
-//            if (viewModel.codigo == tipo.codigoMonedaOrigen) {
-//                intent.putExtra("codigo", tipo.codigoMonedaDestino)
-//            } else {
-//                intent.putExtra("codigo", tipo.codigoMonedaOrigen)
-//            }
-//            setResult(RESULT_OK, intent)
-//            finish()
+            val noticia = viewModel.noticiaList.value!![it]
+            startActivity(DetalleActivity.newInstance(this, noticia))
         }
         viewModel.noticiaList.observe(this) {
             if (it.isNotEmpty()) {
@@ -78,7 +71,7 @@ class NoticiaActivity : AppCompatActivity(R.layout.activity_noticia) {
 
     private fun setupRefresh() {
         binding.srlNoticia.setOnRefreshListener {
-            viewModel.refresh()
+            viewModel.getNoticiasApi()
             binding.srlNoticia.isRefreshing = false
         }
     }

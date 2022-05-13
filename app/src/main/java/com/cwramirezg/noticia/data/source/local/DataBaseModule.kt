@@ -11,7 +11,7 @@ val dataBaseModule = module {
 
 fun getRoom(context: Context): Database {
     return Room.databaseBuilder(context, Database::class.java, BuildConfig.DB_NAME)
-        .createFromAsset("database/app.db")
+//        .createFromAsset("database/app.db")
 //        .addMigrations(
 //            MigrationHelper.MIGRATION_1_2
 //        )

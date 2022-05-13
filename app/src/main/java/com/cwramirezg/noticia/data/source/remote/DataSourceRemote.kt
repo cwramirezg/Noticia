@@ -7,7 +7,7 @@ class DataSourceRemote(
     private val webServices: WebServices
 ) : DataSourceRemoteContract {
 
-    override fun getNoticia(): Observable<Response> {
+    override fun getNoticiaApi(): Observable<Response> {
         return webServices.listNoticia()
     }
 }

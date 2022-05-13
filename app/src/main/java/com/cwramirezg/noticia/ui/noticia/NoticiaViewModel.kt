@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cwramirezg.noticia.data.model.Noticia
 import com.cwramirezg.noticia.data.source.DataSourceRepositoryContract
+import com.cwramirezg.noticia.util.ExtensionStatic
 import com.cwramirezg.noticia.util.SingleLiveEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -22,28 +23,55 @@ class NoticiaViewModel(
     val action: LiveData<String> = _action
 
     init {
-        refresh()
+        if (ExtensionStatic.isOnline()) {
+            getNoticiasApi()
+        } else {
+            getNoticias()
+        }
     }
 
-    fun refresh() {
+    fun getNoticiasApi() {
+        disposables.add(
+            repository.getNoticiaApi()
+                .subscribeOn(Schedulers.io())
+                .map {
+                    val list = it.hits.map {
+                        Noticia(
+                            0L,
+                            it.story_id,
+                            it.story_title ?: "",
+                            it.story_url ?: "",
+                            it.comment_text ?: "",
+                            it.author ?: "",
+                            false
+                        )
+                    }
+                    list
+                }
+                .flatMapSingle { repository.getNoticiaSave(it) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+
+                    },
+                    {
+                        it.printStackTrace()
+                    },
+                    {
+                        getNoticias()
+                    }
+                )
+        )
+    }
+
+    fun getNoticias() {
         disposables.add(
             repository.getNoticia()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        val list = it.hits.map {
-                            Noticia(
-                                0L,
-                                it.story_id,
-                                it.story_title ?: "",
-                                it.story_url ?: "",
-                                it.comment_text ?: "",
-                                it.author ?: "",
-                                false
-                            )
-                        }
-                        _noticiaList.value = list
+                        _noticiaList.value = it
                     },
                     {
                         it.printStackTrace()
