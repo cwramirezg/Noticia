@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cwramirezg.noticia.data.model.Noticia
 import com.cwramirezg.noticia.data.source.DataSourceRepositoryContract
-import com.cwramirezg.noticia.util.ExtensionStatic
 import com.cwramirezg.noticia.util.SingleLiveEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -23,7 +22,7 @@ class NoticiaViewModel(
     val action: LiveData<String> = _action
 
     init {
-        if (ExtensionStatic.isOnline()) {
+        if (repository.isOnline()) {
             getNoticiasApi()
         } else {
             getNoticias()
@@ -65,6 +64,7 @@ class NoticiaViewModel(
     }
 
     fun getNoticias() {
+        disposables.clear()
         disposables.add(
             repository.getNoticia()
                 .subscribeOn(Schedulers.io())
